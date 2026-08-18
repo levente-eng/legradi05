@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://legradis.com/</loc></url>
-<url><loc>https://legradis.com/uzletberendezesek.html</loc></url>
-<url><loc>https://legradis.com/egyedi-butorok.html</loc></url>
-<url><loc>https://legradis.com/design-lepcsok.html</loc></url>
-<url><loc>https://legradis.com/tervezes.html</loc></url>
-<url><loc>https://legradis.com/technologia.html</loc></url>
-<url><loc>https://legradis.com/referenciak.html</loc></url>
-<url><loc>https://legradis.com/blog.html</loc></url>
-<url><loc>https://legradis.com/rolunk.html</loc></url>
-<url><loc>https://legradis.com/kapcsolat.html</loc></url>
-<url><loc>https://legradis.com/keszletrol.html</loc></url>
+  <url><loc>https://legradi.at/</loc></url>
+  <url><loc>https://legradi.at/uzletberendezesek.html</loc></url>
+  <url><loc>https://legradi.at/egyedi-butorok.html</loc></url>
+  <url><loc>https://legradi.at/design-lepcsok.html</loc></url>
+  <url><loc>https://legradi.at/tervezes.html</loc></url>
+  <url><loc>https://legradi.at/technologia.html</loc></url>
+  <url><loc>https://legradi.at/referenciak.html</loc></url>
+  <url><loc>https://legradi.at/keszletrol.html</loc></url>
+  <url><loc>https://legradi.at/rolunk.html</loc></url>
+  <url><loc>https://legradi.at/kapcsolat.html</loc></url>
+  <url><loc>https://legradi.at/blog.html</loc></url>
+  <url><loc>https://legradi.at/blog-tervezes.html</loc></url>
+  <url><loc>https://legradi.at/blog-3d-nyomtatas.html</loc></url>
+  <url><loc>https://legradi.at/blog-design-lepcso.html</loc></url>
+  <url><loc>https://legradi.at/blog-uzletberendezes-folyamat.html</loc></url>
 </urlset>

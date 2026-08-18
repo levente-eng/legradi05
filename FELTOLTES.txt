@@ -1,18 +1,11 @@
-LEGRADI HU / EN / DE nyelvi frissítés
+LEGRADI sitemap frissites
 
-1. Csomagold ki ezt a ZIP-et.
-2. A kicsomagolt mappa TARTALMÁT töltsd a GitHub repository gyökerébe.
-3. Engedélyezd a meglévő fájlok felülírását / cseréjét.
-4. Az assets mappát NE nevezd át. A benne lévő css és js fájlok a meglévő assets mappába kerülnek.
-5. A referencia képeket nem kell újra feltölteni.
+1. Nyisd meg a legradi05 GitHub repository gyokeret.
+2. Add file -> Upload files.
+3. Toltsd fel a sitemap.xml es robots.txt fajlokat a repository gyokerbe.
+4. A meglevo fajlokat irja felul a GitHub.
+5. Commit changes.
 
-Új fájl:
-assets/js/i18n.js
-
-Frissített fájlok:
-- minden HTML oldal
-- assets/js/main.js
-- assets/css/legradi-v3.css
-
-A nyelvválasztó a fejlécben jelenik meg: HU / EN / DE.
-A választott nyelvet a böngésző megjegyzi a következő oldalakra is.
+Megjegyzes:
+- A sitemap mar a vegleges fo domainre, https://legradi.at/ cimre keszult.
+- A HU/DE/EN kulon URL-ek meg nincsenek benne, mert a vegleges /hu/, /de/, /en/ strukturat meg nem epitettuk ki. Amikor ez elkeszul, a sitemapet ujra boviteni kell.
