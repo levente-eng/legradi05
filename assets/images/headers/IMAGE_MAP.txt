@@ -1,0 +1,13 @@
+LEGRADI fejléc képek (Drive forrásból, webre optimalizálva)
+
+home.webp - Főoldal
+planning.webp - Tervezés
+stairs.webp - Design lépcsők
+furniture.webp - Egyedi bútorok
+retail.webp - Üzletberendezések
+stock.webp - Bútorok készletről
+technology.webp - 3D nyomtatás / technológia
+blog.webp - Blog
+references.webp - Referenciák
+about.webp - Rólunk
+contact.webp - Kapcsolat

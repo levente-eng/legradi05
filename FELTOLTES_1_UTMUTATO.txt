@@ -1,0 +1,6 @@
+LEGRADI GitHub feltoltes - 1/3
+
+Csomagold ki ezt a ZIP-et, majd a KICSOMAGOLT TARTALMAT huzd be a GitHub repository gyokerebe.
+A mappaszerkezetet ne valtoztasd meg.
+Toltsd fel mindharom csomagot sorrendben: 1, 2, 3.
+Ha a GitHub rakerdez az azonos nevu mappakra, azok ugyanannak a weboldalnak a reszei.
