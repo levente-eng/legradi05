@@ -1,0 +1,5 @@
+LEGRADI GitHub feltoltes 2B
+
+Ez a masodik csomag ket reszre bontott valtozata.
+Csomagold ki, majd a kicsomagolt mappa TARTALMAT huzd a GitHub repository gyokerebe.
+Fajlok ebben a csomagban: 45 referenciafajl.
