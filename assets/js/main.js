@@ -65,10 +65,11 @@
   let activeProjectImages = [];
   let activeProjectIndex = 0;
   let activeProjectTitle = '';
+  let activeProjectTitleGetter = null;
   function openLightbox(src, caption) {
     if (!lightbox || !lightboxImage) return;
     lightboxImage.src = src;
-    lightboxImage.alt = caption || 'Nagyított referenciafotó';
+    lightboxImage.alt = caption || (document.documentElement.lang === 'en' ? 'Enlarged reference photo' : document.documentElement.lang === 'de' ? 'Vergrößertes Referenzfoto' : 'Nagyított referenciafotó');
     if (lightboxCaption) lightboxCaption.textContent = caption || '';
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
@@ -82,6 +83,7 @@
     activeProjectImages = [];
     activeProjectIndex = 0;
     activeProjectTitle = '';
+    activeProjectTitleGetter = null;
     if (lightboxPrev) lightboxPrev.hidden = true;
     if (lightboxNext) lightboxNext.hidden = true;
   }
@@ -89,8 +91,10 @@
     if (!activeProjectImages.length || !lightboxImage) return;
     const src = activeProjectImages[activeProjectIndex];
     lightboxImage.src = src;
-    lightboxImage.alt = `${activeProjectTitle} — ${activeProjectIndex + 1}. kép`;
-    if (lightboxCaption) lightboxCaption.textContent = `${activeProjectTitle} — ${activeProjectIndex + 1} / ${activeProjectImages.length}`;
+    const currentTitle = activeProjectTitleGetter ? activeProjectTitleGetter() : activeProjectTitle;
+    const imageWord = document.documentElement.lang === 'en' ? 'image' : document.documentElement.lang === 'de' ? 'Bild' : 'kép';
+    lightboxImage.alt = `${currentTitle} — ${activeProjectIndex + 1}. ${imageWord}`;
+    if (lightboxCaption) lightboxCaption.textContent = `${currentTitle} — ${activeProjectIndex + 1} / ${activeProjectImages.length}`;
   }
   document.querySelectorAll('[data-lightbox-src]').forEach(btn => btn.addEventListener('click', () => {
     activeProjectImages = [];
@@ -112,12 +116,12 @@
     const prev = project.querySelector('[data-project-prev]');
     const next = project.querySelector('[data-project-next]');
     const open = project.querySelector('[data-project-open]');
-    const title = project.querySelector('h3')?.textContent.trim() || 'Referencia';
+    const getTitle = () => project.querySelector('h3')?.textContent.trim() || (document.documentElement.lang === 'en' ? 'Reference' : document.documentElement.lang === 'de' ? 'Referenz' : 'Referencia');
     let index = 0;
     const render = () => {
       if (image) {
         image.src = images[index];
-        image.alt = `${title} — ${index + 1}. kép`;
+        image.alt = `${getTitle()} — ${index + 1}. ${document.documentElement.lang === 'en' ? 'image' : document.documentElement.lang === 'de' ? 'Bild' : 'kép'}`;
       }
       if (counter) counter.textContent = `${index + 1} / ${images.length}`;
     };
@@ -135,12 +139,26 @@
     open?.addEventListener('click', () => {
       activeProjectImages = images;
       activeProjectIndex = index;
-      activeProjectTitle = title;
-      openLightbox(images[index], `${title} — ${index + 1} / ${images.length}`);
+      activeProjectTitle = getTitle();
+      activeProjectTitleGetter = getTitle;
+      openLightbox(images[index], `${getTitle()} — ${index + 1} / ${images.length}`);
       if (lightboxPrev) lightboxPrev.hidden = images.length <= 1;
       if (lightboxNext) lightboxNext.hidden = images.length <= 1;
     });
     render();
+  });
+  window.addEventListener('legradi:languagechange', () => {
+    document.querySelectorAll('[data-project]').forEach(project => {
+      const image = project.querySelector('[data-project-image]');
+      const counter = project.querySelector('[data-project-counter]');
+      if (image && counter) {
+        const parts = counter.textContent.split('/');
+        const current = Number(parts[0]?.trim()) || 1;
+        const title = project.querySelector('h3')?.textContent.trim() || '';
+        image.alt = `${title} — ${current}. ${document.documentElement.lang === 'en' ? 'image' : document.documentElement.lang === 'de' ? 'Bild' : 'kép'}`;
+      }
+    });
+    if (lightbox && !lightbox.hidden && activeProjectImages.length) showLightboxProjectImage();
   });
   lightboxPrev?.addEventListener('click', event => {
     event.stopPropagation();
@@ -173,18 +191,21 @@
     if (!contactForm.reportValidity()) return;
     const data = new FormData(contactForm);
     const destination = contactForm.dataset.email;
-    const subject = encodeURIComponent(`Weboldali megkeresés – ${data.get('type') || 'projekt'}`);
+    const lang = document.documentElement.lang || 'hu';
+    const subjectPrefix = lang === 'en' ? 'Website enquiry' : lang === 'de' ? 'Website-Anfrage' : 'Weboldali megkeresés';
+    const translatedType = window.LEGRADI_I18N?.t(data.get('type') || '') || data.get('type') || '';
+    const subject = encodeURIComponent(`${subjectPrefix} – ${translatedType || (lang === 'en' ? 'project' : lang === 'de' ? 'Projekt' : 'projekt')}`);
     const body = encodeURIComponent([
-      `Név / cégnév: ${data.get('name') || ''}`,
+      `${lang === 'en' ? 'Name / company' : lang === 'de' ? 'Name / Firma' : 'Név / cégnév'}: ${data.get('name') || ''}`,
       `E-mail: ${data.get('email') || ''}`,
-      `Telefon: ${data.get('phone') || ''}`,
-      `Projekt típusa: ${data.get('type') || ''}`,
+      `${lang === 'en' ? 'Phone' : lang === 'de' ? 'Telefon' : 'Telefon'}: ${data.get('phone') || ''}`,
+      `${lang === 'en' ? 'Project type' : lang === 'de' ? 'Projektart' : 'Projekt típusa'}: ${translatedType}`,
       '',
-      'Projekt leírása:',
+      lang === 'en' ? 'Project description:' : lang === 'de' ? 'Projektbeschreibung:' : 'Projekt leírása:',
       data.get('message') || ''
     ].join('\n'));
     const status = contactForm.querySelector('.form-status');
-    if (status) status.textContent = 'Megnyitjuk a levelezőprogramot az előkészített üzenettel.';
+    if (status) status.textContent = lang === 'en' ? 'Opening your email client with the prepared message.' : lang === 'de' ? 'Ihr E-Mail-Programm wird mit der vorbereiteten Nachricht geöffnet.' : 'Megnyitjuk a levelezőprogramot az előkészített üzenettel.';
     window.location.href = `mailto:${destination}?subject=${subject}&body=${body}`;
   });
 
@@ -194,7 +215,7 @@
     if (!form.reportValidity()) return;
     const button = form.querySelector('button');
     const original = button.textContent;
-    button.textContent = 'Rögzítve';
+    button.textContent = document.documentElement.lang === 'en' ? 'Saved' : document.documentElement.lang === 'de' ? 'Gespeichert' : 'Rögzítve';
     button.disabled = true;
     setTimeout(() => { button.textContent = original; button.disabled = false; form.reset(); }, 1800);
   }));

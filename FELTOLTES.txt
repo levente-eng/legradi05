@@ -1,0 +1,18 @@
+LEGRADI HU / EN / DE nyelvi frissítés
+
+1. Csomagold ki ezt a ZIP-et.
+2. A kicsomagolt mappa TARTALMÁT töltsd a GitHub repository gyökerébe.
+3. Engedélyezd a meglévő fájlok felülírását / cseréjét.
+4. Az assets mappát NE nevezd át. A benne lévő css és js fájlok a meglévő assets mappába kerülnek.
+5. A referencia képeket nem kell újra feltölteni.
+
+Új fájl:
+assets/js/i18n.js
+
+Frissített fájlok:
+- minden HTML oldal
+- assets/js/main.js
+- assets/css/legradi-v3.css
+
+A nyelvválasztó a fejlécben jelenik meg: HU / EN / DE.
+A választott nyelvet a böngésző megjegyzi a következő oldalakra is.

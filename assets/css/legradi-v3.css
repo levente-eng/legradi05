@@ -458,3 +458,11 @@ p{margin:0 0 1.25rem}
 .lightbox-nav[hidden]{display:none}
 @media (max-width:1180px){.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.project-grid{grid-template-columns:1fr}.project-nav{width:40px;height:40px}.project-prev{left:.45rem}.project-next{right:.45rem}.lightbox-nav{width:44px;height:44px;font-size:2rem}.lightbox-prev{left:.6rem}.lightbox-next{right:.6rem}.lightbox{padding:1rem 3.2rem}.lightbox p{max-width:calc(100% - 1.5rem);text-align:center}}
+
+
+/* === LEGRADI HU / EN / DE language switcher === */
+.lang-switcher{display:flex;align-items:center;gap:.15rem;margin-left:.15rem;padding:.16rem;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(0,0,0,.22);flex:0 0 auto}
+.lang-option{appearance:none;border:0;background:transparent;color:#aeb0b4;font:700 .68rem/1 "Rajdhani",sans-serif;letter-spacing:.08em;padding:.38rem .44rem;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.lang-option:hover{color:#fff}.lang-option.is-active{background:#fff;color:#080808}
+@media (max-width:1180px){.site-nav{gap:.7rem;font-size:.79rem}.lang-option{padding:.34rem .38rem}.nav-cta{margin-left:.15rem}}
+@media (max-width:860px){.lang-switcher{margin:1rem 0 .45rem;align-self:flex-start}.lang-option{font-size:.82rem;padding:.5rem .62rem}}
