@@ -67,7 +67,7 @@
       const assetsPrefix = scriptPath.replace(/assets\/js\/i18n\.js(?:.*)?$/, 'assets/');
       const logo = document.createElement('img');
       logo.className = 'hero-brand-mark';
-      logo.src = assetsPrefix + 'images/logo-light.png';
+      logo.src = assetsPrefix + 'images/logo-light.svg';
       logo.alt = 'LEGRADI';
       logo.decoding = 'async';
       hero.appendChild(logo);
