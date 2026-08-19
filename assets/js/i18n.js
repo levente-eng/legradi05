@@ -4,6 +4,13 @@
   try { localStorage.setItem('legradi-language', lang); } catch (_) {}
 
   const current = document.currentScript?.src || '';
+
+  // Keep every visible LEGRADI brand mark crisp by using the SVG asset.
+  document.querySelectorAll('img[src*="logo-light.png"]').forEach(img => {
+    const source = img.getAttribute('src') || '';
+    img.setAttribute('src', source.replace('logo-light.png', 'logo-light.svg'));
+  });
+
   const coreUrl = current.replace(/i18n\.js(?:\?.*)?$/, 'i18n-core.js');
   if (coreUrl) {
     try {
