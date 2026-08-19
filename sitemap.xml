@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://legradi.at/</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://legradi.at/</loc><xhtml:link rel="alternate" hreflang="de" href="https://legradi.at/"/><xhtml:link rel="alternate" hreflang="hu" href="https://legradi.at/hu/"/><xhtml:link rel="alternate" hreflang="en" href="https://legradi.at/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://legradi.at/"/></url>
+  <url><loc>https://legradi.at/hu/</loc><xhtml:link rel="alternate" hreflang="de" href="https://legradi.at/"/><xhtml:link rel="alternate" hreflang="hu" href="https://legradi.at/hu/"/><xhtml:link rel="alternate" hreflang="en" href="https://legradi.at/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://legradi.at/"/></url>
+  <url><loc>https://legradi.at/en/</loc><xhtml:link rel="alternate" hreflang="de" href="https://legradi.at/"/><xhtml:link rel="alternate" hreflang="hu" href="https://legradi.at/hu/"/><xhtml:link rel="alternate" hreflang="en" href="https://legradi.at/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://legradi.at/"/></url>
   <url><loc>https://legradi.at/uzletberendezesek.html</loc></url>
+  <url><loc>https://legradi.at/hu/uzletberendezesek.html</loc></url>
+  <url><loc>https://legradi.at/en/uzletberendezesek.html</loc></url>
   <url><loc>https://legradi.at/egyedi-butorok.html</loc></url>
+  <url><loc>https://legradi.at/hu/egyedi-butorok.html</loc></url>
+  <url><loc>https://legradi.at/en/egyedi-butorok.html</loc></url>
   <url><loc>https://legradi.at/design-lepcsok.html</loc></url>
+  <url><loc>https://legradi.at/hu/design-lepcsok.html</loc></url>
+  <url><loc>https://legradi.at/en/design-lepcsok.html</loc></url>
   <url><loc>https://legradi.at/tervezes.html</loc></url>
+  <url><loc>https://legradi.at/hu/tervezes.html</loc></url>
+  <url><loc>https://legradi.at/en/tervezes.html</loc></url>
   <url><loc>https://legradi.at/technologia.html</loc></url>
+  <url><loc>https://legradi.at/hu/technologia.html</loc></url>
+  <url><loc>https://legradi.at/en/technologia.html</loc></url>
   <url><loc>https://legradi.at/referenciak.html</loc></url>
+  <url><loc>https://legradi.at/hu/referenciak.html</loc></url>
+  <url><loc>https://legradi.at/en/referenciak.html</loc></url>
   <url><loc>https://legradi.at/keszletrol.html</loc></url>
+  <url><loc>https://legradi.at/hu/keszletrol.html</loc></url>
+  <url><loc>https://legradi.at/en/keszletrol.html</loc></url>
   <url><loc>https://legradi.at/rolunk.html</loc></url>
+  <url><loc>https://legradi.at/hu/rolunk.html</loc></url>
+  <url><loc>https://legradi.at/en/rolunk.html</loc></url>
   <url><loc>https://legradi.at/kapcsolat.html</loc></url>
+  <url><loc>https://legradi.at/hu/kapcsolat.html</loc></url>
+  <url><loc>https://legradi.at/en/kapcsolat.html</loc></url>
   <url><loc>https://legradi.at/blog.html</loc></url>
+  <url><loc>https://legradi.at/hu/blog.html</loc></url>
+  <url><loc>https://legradi.at/en/blog.html</loc></url>
   <url><loc>https://legradi.at/blog-tervezes.html</loc></url>
+  <url><loc>https://legradi.at/hu/blog-tervezes.html</loc></url>
+  <url><loc>https://legradi.at/en/blog-tervezes.html</loc></url>
   <url><loc>https://legradi.at/blog-3d-nyomtatas.html</loc></url>
+  <url><loc>https://legradi.at/hu/blog-3d-nyomtatas.html</loc></url>
+  <url><loc>https://legradi.at/en/blog-3d-nyomtatas.html</loc></url>
   <url><loc>https://legradi.at/blog-design-lepcso.html</loc></url>
+  <url><loc>https://legradi.at/hu/blog-design-lepcso.html</loc></url>
+  <url><loc>https://legradi.at/en/blog-design-lepcso.html</loc></url>
   <url><loc>https://legradi.at/blog-uzletberendezes-folyamat.html</loc></url>
+  <url><loc>https://legradi.at/hu/blog-uzletberendezes-folyamat.html</loc></url>
+  <url><loc>https://legradi.at/en/blog-uzletberendezes-folyamat.html</loc></url>
 </urlset>
