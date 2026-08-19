@@ -1,0 +1,7 @@
+LEGRADI JOGI FRISSITES
+
+1. Csomagold ki ezt a ZIP-et.
+2. A LEGRADI_JOGI_PATCH mappa TARTALMAT toltsd fel a GitHub legradi05 repository gyokerebe.
+3. Az azonos nevu impresszum.html, adatkezeles.html es assets/js/i18n.js fajlok frissulnek.
+4. A referencia kepekhez, sitemap.xml-hez es robots.txt-hez ez a csomag nem nyul.
+5. Commit utan vard meg a GitHub Pages frissiteset, majd Ctrl+F5.
