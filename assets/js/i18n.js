@@ -57,6 +57,47 @@
     if (marker !== -1) ogImage.content = `https://legradi.at${ogImage.content.slice(marker)}`;
   }
 
+  const localeMap = { de: 'de_AT', hu: 'hu_HU', en: 'en_GB' };
+  const ogLocale = document.querySelector('meta[property="og:locale"]') || document.head.appendChild(Object.assign(document.createElement('meta'), { property: 'og:locale' }));
+  ogLocale.content = localeMap[lang];
+  document.querySelectorAll('meta[property="og:locale:alternate"]').forEach(el => el.remove());
+  Object.entries(localeMap).filter(([code]) => code !== lang).forEach(([, locale]) => {
+    const meta = document.createElement('meta');
+    meta.setAttribute('property', 'og:locale:alternate');
+    meta.content = locale;
+    document.head.appendChild(meta);
+  });
+
+  const schemaId = 'legradi-organization-schema';
+  let schema = document.getElementById(schemaId);
+  if (!schema) {
+    schema = document.createElement('script');
+    schema.id = schemaId;
+    schema.type = 'application/ld+json';
+    document.head.appendChild(schema);
+  }
+  schema.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'LEGRADI',
+    legalName: 'Légrádi Kft.',
+    url: 'https://legradi.at/',
+    logo: 'https://legradi.at/assets/images/logo-light.svg',
+    email: 'office@legradis.com',
+    telephone: '+36 70 779 0790',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Batthyány tér 5.',
+      postalCode: '9022',
+      addressLocality: 'Győr',
+      addressCountry: 'HU'
+    },
+    areaServed: [
+      { '@type': 'Country', name: 'Hungary' },
+      { '@type': 'Country', name: 'Austria' }
+    ]
+  });
+
   document.querySelectorAll('[data-lang-option]').forEach(button => {
     button.addEventListener('click', event => {
       event.preventDefault();
