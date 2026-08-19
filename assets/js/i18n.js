@@ -104,4 +104,10 @@
       }
     }
   }
+
+  if (pageFile === 'kapcsolat.html') {
+    const contactScript = document.createElement('script');
+    contactScript.src = current.replace(/i18n\.js(?:\?.*)?$/, 'contact-return.js?v=20260819-fix1');
+    document.body.appendChild(contactScript);
+  }
 })();
