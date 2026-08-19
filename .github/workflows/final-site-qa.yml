@@ -1,0 +1,82 @@
+name: Final site QA
+
+on:
+  push:
+    branches:
+      - final-site-qa
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check internal HTML links and assets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urlsplit, unquote
+          import sys
+
+          root = Path('.').resolve()
+          html_files = list(Path('.').glob('*.html')) + list(Path('hu').glob('*.html')) + list(Path('en').glob('*.html'))
+          errors = []
+          warnings = []
+
+          class Parser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.refs = []
+                  self.ids = []
+              def handle_starttag(self, tag, attrs):
+                  d = dict(attrs)
+                  if 'id' in d:
+                      self.ids.append(d['id'])
+                  for attr in ('href','src'):
+                      if attr in d and d[attr]:
+                          self.refs.append((tag, attr, d[attr]))
+
+          for html in html_files:
+              p = Parser()
+              try:
+                  p.feed(html.read_text(encoding='utf-8'))
+              except Exception as e:
+                  errors.append(f'{html}: HTML parse error: {e}')
+                  continue
+              dup = {x for x in p.ids if p.ids.count(x) > 1}
+              for item in sorted(dup):
+                  warnings.append(f'{html}: duplicate id #{item}')
+              for tag, attr, raw in p.refs:
+                  if raw.startswith(('#','mailto:','tel:','javascript:','data:')):
+                      continue
+                  u = urlsplit(raw)
+                  if u.scheme or u.netloc:
+                      continue
+                  path = unquote(u.path)
+                  if not path:
+                      continue
+                  target = (html.parent / path).resolve()
+                  try:
+                      target.relative_to(root)
+                  except ValueError:
+                      errors.append(f'{html}: {attr} escapes repo: {raw}')
+                      continue
+                  if path.endswith('/'):
+                      target = target / 'index.html'
+                  if not target.exists():
+                      errors.append(f'{html}: missing {attr} target: {raw}')
+
+          print(f'Checked {len(html_files)} HTML files')
+          if warnings:
+              print('\nWARNINGS:')
+              print('\n'.join(warnings))
+          if errors:
+              print('\nERRORS:')
+              print('\n'.join(errors))
+              sys.exit(1)
+          print('\nNo missing internal HTML/link/asset targets found.')
+          PY
