@@ -59,4 +59,49 @@
       window.location.href = localPathFor(target);
     }, true);
   });
+
+  if (isHome) {
+    const hero = document.querySelector('.hero-home');
+    if (hero && !hero.querySelector('.hero-brand-mark')) {
+      const scriptPath = new URL(current, window.location.href).pathname;
+      const assetsPrefix = scriptPath.replace(/assets\/js\/i18n\.js(?:.*)?$/, 'assets/');
+      const logo = document.createElement('img');
+      logo.className = 'hero-brand-mark';
+      logo.src = assetsPrefix + 'images/logo-light.png';
+      logo.alt = 'LEGRADI';
+      logo.decoding = 'async';
+      hero.appendChild(logo);
+
+      if (!document.getElementById('hero-brand-mark-style')) {
+        const style = document.createElement('style');
+        style.id = 'hero-brand-mark-style';
+        style.textContent = `
+          .hero-home .hero-brand-mark{
+            position:absolute;
+            z-index:3;
+            left:clamp(28px,7vw,110px);
+            top:50%;
+            transform:translateY(-50%);
+            width:clamp(220px,26vw,470px);
+            height:auto;
+            max-width:42vw;
+            object-fit:contain;
+            filter:drop-shadow(0 4px 18px rgba(0,0,0,.28));
+            pointer-events:none;
+            user-select:none;
+          }
+          @media (max-width:700px){
+            .hero-home .hero-brand-mark{
+              left:50%;
+              top:44%;
+              transform:translate(-50%,-50%);
+              width:min(72vw,330px);
+              max-width:72vw;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+  }
 })();
