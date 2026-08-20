@@ -153,6 +153,11 @@
     }
   }
 
+  const analyticsScript = document.createElement('script');
+  analyticsScript.src = current.replace(/i18n\.js(?:\?.*)?$/, 'analytics.js?v=20260820-ga4');
+  analyticsScript.async = true;
+  document.body.appendChild(analyticsScript);
+
   if (pageFile === 'kapcsolat.html') {
     const contactScript = document.createElement('script');
     contactScript.src = current.replace(/i18n\.js(?:\?.*)?$/, 'contact-return.js?v=20260819-fix1');
