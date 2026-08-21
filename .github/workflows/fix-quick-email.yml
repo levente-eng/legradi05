@@ -1,0 +1,97 @@
+name: Fix LEGRADI QUICK email compose
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-quick-email.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch QUICK email compose UI
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          files = {
+              'keszletrol.html': {
+                  'note': 'Nach dem Absenden können Sie Gmail, Outlook oder Ihr Standard-E-Mail-Programm auswählen.',
+                  'title': 'E-Mail verfassen',
+                  'intro': 'Ihre Anfrage ist vorbereitet. Wählen Sie aus, womit Sie die Nachricht öffnen möchten.',
+                  'gmail': 'In Gmail öffnen', 'outlook': 'In Outlook öffnen', 'default': 'Standard-E-Mail-Programm',
+                  'copy': 'Text kopieren', 'copied': 'Kopiert', 'close': 'Schließen',
+                  'subject': 'LEGRADI QUICK – Interessensvormerkung – ',
+                  'parts': [('Firma / Name: ','q-company'),('E-Mail: ','q-email'),('Produkt: ','q-product'),('Voraussichtliche Stückzahl: ','q-qty'),('Land: ','q-country'),('Anmerkung: ','q-note')],
+                  'prefix': ''
+              },
+              'hu/keszletrol.html': {
+                  'note': 'Elküldés után kiválaszthatod, hogy Gmailben, Outlookban vagy az alapértelmezett levelezőben nyíljon meg az üzenet.',
+                  'title': 'E-mail írása',
+                  'intro': 'Az érdeklődésedet előkészítettük. Válaszd ki, melyik levelezőben szeretnéd megnyitni.',
+                  'gmail': 'Megnyitás Gmailben', 'outlook': 'Megnyitás Outlookban', 'default': 'Alapértelmezett levelező',
+                  'copy': 'Szöveg másolása', 'copied': 'Kimásolva', 'close': 'Bezárás',
+                  'subject': 'LEGRADI QUICK – Érdeklődés – ',
+                  'parts': [('Cégnév / Név: ','q-company'),('E-mail: ','q-email'),('Termék: ','q-product'),('Várható darabszám: ','q-qty'),('Ország: ','q-country'),('Megjegyzés: ','q-note')],
+                  'prefix': '../'
+              },
+              'en/keszletrol.html': {
+                  'note': 'After submitting, choose Gmail, Outlook or your default email application to open the prepared message.',
+                  'title': 'Compose email',
+                  'intro': 'Your enquiry is prepared. Choose where you would like to open the message.',
+                  'gmail': 'Open in Gmail', 'outlook': 'Open in Outlook', 'default': 'Default email app',
+                  'copy': 'Copy message', 'copied': 'Copied', 'close': 'Close',
+                  'subject': 'LEGRADI QUICK – Interest registration – ',
+                  'parts': [('Company / Name: ','q-company'),('Email: ','q-email'),('Product: ','q-product'),('Estimated quantity: ','q-qty'),('Country: ','q-country'),('Note: ','q-note')],
+                  'prefix': '../'
+              }
+          }
+
+          css = '''
+          .email-choice[hidden]{display:none}.email-choice{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:22px}.email-choice-card{width:min(560px,100%);background:#fff;color:#111;padding:28px;box-shadow:0 20px 70px rgba(0,0,0,.35)}.email-choice-card h3{margin:0 0 8px;font-size:1.65rem}.email-choice-card p{margin:0 0 20px;color:#666;line-height:1.55}.email-choice-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.email-choice-actions a,.email-choice-actions button{margin:0;width:100%;justify-content:center}.email-choice-preview{margin-top:16px;padding:14px;background:#f3f3f1;color:#333;font-size:.8rem;line-height:1.5;white-space:pre-wrap;max-height:180px;overflow:auto}.email-choice-close{margin-top:12px;width:100%;border:0;background:transparent;padding:10px;cursor:pointer;font:inherit;color:#666}@media(max-width:600px){.email-choice-actions{grid-template-columns:1fr}}
+          '''
+
+          for filename, cfg in files.items():
+              p = Path(filename)
+              txt = p.read_text(encoding='utf-8')
+
+              # Ensure the language subpages use the root QUICK product images.
+              if cfg['prefix']:
+                  txt = txt.replace('src="assets/images/quick/qube-black.webp"', 'src="../assets/images/quick/qube-black.webp"')
+                  txt = txt.replace('src="assets/images/quick/podium-black.webp"', 'src="../assets/images/quick/podium-black.webp"')
+                  txt = txt.replace('src="assets/images/quick/table-black.webp"', 'src="../assets/images/quick/table-black.webp"')
+
+              if '.email-choice[hidden]' not in txt:
+                  txt = txt.replace('</style>', css + '</style>', 1)
+
+              txt = re.sub(r'<p class="quick-form-note">.*?</p>', f'<p class="quick-form-note">{cfg["note"]}</p>', txt, count=1, flags=re.S)
+
+              if 'id="email-choice"' not in txt:
+                  modal = f'''\n<div class="email-choice" id="email-choice" hidden aria-hidden="true"><div class="email-choice-card" role="dialog" aria-modal="true" aria-labelledby="email-choice-title"><h3 id="email-choice-title">{cfg['title']}</h3><p>{cfg['intro']}</p><div class="email-choice-actions"><a class="button button-red" id="email-gmail" href="#" target="_blank" rel="noopener">{cfg['gmail']}</a><a class="button" id="email-outlook" href="#" target="_blank" rel="noopener">{cfg['outlook']}</a><a class="button" id="email-default" href="#">{cfg['default']}</a><button class="button" id="email-copy" type="button">{cfg['copy']}</button></div><div class="email-choice-preview" id="email-preview"></div><button class="email-choice-close" id="email-close" type="button">{cfg['close']}</button></div></div>\n'''
+                  txt = txt.replace('</main>', modal + '</main>', 1)
+
+              body_expr = " + '\\n' + ".join([f"'{label}' + document.getElementById('{eid}').value" for label,eid in cfg['parts'][:-1]])
+              label,eid = cfg['parts'][-1]
+              body_expr += f" + '\\n\\n' + '{label}' + document.getElementById('{eid}').value"
+
+              script = f'''<script>\n(() => {{\n  const form = document.getElementById('quick-interest-form');\n  const product = document.getElementById('q-product');\n  const modal = document.getElementById('email-choice');\n  const gmail = document.getElementById('email-gmail');\n  const outlook = document.getElementById('email-outlook');\n  const defaultMail = document.getElementById('email-default');\n  const copyBtn = document.getElementById('email-copy');\n  const closeBtn = document.getElementById('email-close');\n  const preview = document.getElementById('email-preview');\n  let preparedText = '';\n  document.querySelectorAll('.quick-interest').forEach(btn => btn.addEventListener('click', () => {{ product.value = btn.dataset.product || ''; document.getElementById('interesse').scrollIntoView({{behavior:'smooth'}}); }}));\n  function closeModal() {{ modal.hidden = true; modal.setAttribute('aria-hidden','true'); }}\n  closeBtn.addEventListener('click', closeModal);\n  modal.addEventListener('click', e => {{ if (e.target === modal) closeModal(); }});\n  document.addEventListener('keydown', e => {{ if (e.key === 'Escape' && !modal.hidden) closeModal(); }});\n  copyBtn.addEventListener('click', async () => {{\n    try {{ await navigator.clipboard.writeText(preparedText); const old = copyBtn.textContent; copyBtn.textContent = '{cfg['copied']}'; setTimeout(() => copyBtn.textContent = old, 1600); }} catch (_) {{}}\n  }});\n  form.addEventListener('submit', e => {{\n    e.preventDefault();\n    if (!form.reportValidity()) return;\n    const subjectText = '{cfg['subject']}' + product.value;\n    const bodyText = {body_expr};\n    preparedText = subjectText + '\\n\\n' + bodyText;\n    const subject = encodeURIComponent(subjectText);\n    const body = encodeURIComponent(bodyText);\n    gmail.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=office@legradis.com&su=' + subject + '&body=' + body;\n    outlook.href = 'https://outlook.office.com/mail/deeplink/compose?to=office@legradis.com&subject=' + subject + '&body=' + body;\n    defaultMail.href = 'mailto:office@legradis.com?subject=' + subject + '&body=' + body;\n    preview.textContent = preparedText;\n    modal.hidden = false;\n    modal.setAttribute('aria-hidden','false');\n  }});\n}})();\n</script>'''
+
+              txt = re.sub(r'<script>\s*\(\(\) => \{.*?</script>\s*</body>', script + '\n</body>', txt, count=1, flags=re.S)
+              p.write_text(txt, encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add keszletrol.html hu/keszletrol.html en/keszletrol.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Fix QUICK email compose interface"
+            git push
+          fi
