@@ -1,4 +1,4 @@
-name: Make QUICK form match contact form
+name: Fix Hungarian QUICK interest scroll
 
 on:
   push:
@@ -15,73 +15,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Convert QUICK forms to FormSubmit
+      - name: Make Hungarian interest buttons native anchors
         shell: bash
         run: |
           python3 <<'PY'
           from pathlib import Path
           import re
 
-          configs = {
-            'keszletrol.html': {
-              'subject': 'LEGRADI QUICK – Interessensvormerkung',
-              'next': 'https://legradi.at/keszletrol.html?sent=1#interesse',
-              'company': 'Firma / Name', 'email': 'E-Mail', 'product': 'Produkt', 'choose': 'Bitte auswählen',
-              'qty': 'Voraussichtliche Stückzahl', 'country': 'Land', 'country_ph': 'z. B. Österreich',
-              'note': 'Farb-/Oberflächenwunsch oder Anmerkung', 'privacy': 'Ich stimme zu, dass meine Nachricht zum Zweck der Kontaktaufnahme verarbeitet wird.',
-              'send': 'Interesse unverbindlich senden',
-              'formnote': 'Die Nachricht wird direkt an office@legradis.com gesendet.'
-            },
-            'hu/keszletrol.html': {
-              'subject': 'LEGRADI QUICK – Érdeklődés',
-              'next': 'https://legradi.at/hu/keszletrol.html?sent=1#interesse',
-              'company': 'Cégnév / Név', 'email': 'E-mail', 'product': 'Termék', 'choose': 'Válassz',
-              'qty': 'Várható darabszám', 'country': 'Ország', 'country_ph': 'pl. Ausztria',
-              'note': 'Szín-/felületigény vagy megjegyzés', 'privacy': 'Elfogadom, hogy az üzenetemet kapcsolatfelvétel céljából kezeljék.',
-              'send': 'Érdeklődés elküldése',
-              'formnote': 'Az üzenet közvetlenül az office@legradis.com címre kerül.'
-            },
-            'en/keszletrol.html': {
-              'subject': 'LEGRADI QUICK – Interest registration',
-              'next': 'https://legradi.at/en/keszletrol.html?sent=1#interesse',
-              'company': 'Company / Name', 'email': 'Email', 'product': 'Product', 'choose': 'Please select',
-              'qty': 'Estimated quantity', 'country': 'Country', 'country_ph': 'e.g. Austria',
-              'note': 'Colour / finish request or note', 'privacy': 'I agree that my message may be processed for the purpose of contacting me.',
-              'send': 'Send non-binding enquiry',
-              'formnote': 'The message is sent directly to office@legradis.com.'
-            }
-          }
+          p = Path('hu/keszletrol.html')
+          txt = p.read_text(encoding='utf-8')
 
-          products = ['QUBE 60','QUBE 70','QUBE 90','PODIUM 90','DISPLAY TABLE 138','DISPLAY TABLE 170']
+          # Make every product-level "Érdeklődés jelzése" control a real anchor.
+          # This guarantees scrolling to the form even if JavaScript is unavailable.
+          txt = re.sub(
+              r'<button class="button button-red quick-interest" data-product="([^"]+)" type="button">Érdeklődés jelzése</button>',
+              r'<a class="button button-red quick-interest" data-product="\1" href="#interesse">Érdeklődés jelzése</a>',
+              txt
+          )
 
-          for filename, c in configs.items():
-            p = Path(filename)
-            txt = p.read_text(encoding='utf-8')
+          # Keep product preselection when JS is available, but do not control scrolling in JS.
+          helper = '''<script>\n(() => {\n  const product = document.getElementById('q-product');\n  document.querySelectorAll('.quick-interest[data-product]').forEach(link => link.addEventListener('click', () => {\n    if (product) product.value = link.dataset.product || '';\n  }));\n})();\n</script>'''
+          txt = re.sub(r'<script>\s*\(\(\) => \{.*?</script>\s*</body>', helper + '\n</body>', txt, count=1, flags=re.S)
 
-            # Remove the temporary email-choice UI/CSS introduced previously.
-            txt = re.sub(r'\s*\.email-choice\[hidden\]\{.*?@media\(max-width:600px\)\{\.email-choice-actions\{grid-template-columns:1fr\}\}\s*', '\n', txt, flags=re.S)
-            txt = re.sub(r'\n<div class="email-choice" id="email-choice".*?</div></div>\n', '\n', txt, count=1, flags=re.S)
-
-            # Ensure checkbox looks like the working contact-form checkbox.
-            if '.quick-form .checkbox' not in txt:
-              txt = txt.replace('.quick-form-note{grid-column:1/-1;color:#888;font-size:.72rem;margin:0}', '.quick-form-note{grid-column:1/-1;color:#888;font-size:.72rem;margin:0}.quick-form .checkbox{grid-column:1/-1;display:flex;align-items:flex-start;gap:10px;color:#aaa;font-size:.76rem;line-height:1.45}.quick-form .checkbox input{width:auto;margin-top:3px;flex:0 0 auto}')
-
-            options = ''.join(f'<option>{x}</option>' for x in products)
-            form = f'''<form class="quick-form" id="quick-interest-form" action="https://formsubmit.co/office@legradis.com" method="POST"><input name="_subject" type="hidden" value="{c['subject']}"/><input name="_template" type="hidden" value="table"/><input name="_captcha" type="hidden" value="false"/><input name="_next" type="hidden" value="{c['next']}"/><input autocomplete="off" name="_honey" style="display:none" tabindex="-1" type="text"/><div><label for="q-company">{c['company']}</label><input id="q-company" name="company" required type="text"/></div><div><label for="q-email">{c['email']}</label><input id="q-email" name="email" required type="email"/></div><div><label for="q-product">{c['product']}</label><select id="q-product" name="product" required><option value="">{c['choose']}</option>{options}</select></div><div><label for="q-qty">{c['qty']}</label><input id="q-qty" name="quantity" min="1" type="number" value="1"/></div><div class="full"><label for="q-country">{c['country']}</label><input id="q-country" name="country" placeholder="{c['country_ph']}" type="text"/></div><div class="full"><label for="q-note">{c['note']}</label><textarea id="q-note" name="message"></textarea></div><label class="checkbox"><input name="privacy_acknowledged" required type="checkbox" value="yes"/><span>{c['privacy']}</span></label><button class="button button-red" type="submit">{c['send']}</button><p class="quick-form-note">{c['formnote']}</p></form>'''
-
-            txt = re.sub(r'<form class="quick-form" id="quick-interest-form".*?</form>', form, txt, count=1, flags=re.S)
-
-            # Keep only product-button helper JS. Form submission remains native, exactly like the contact page.
-            helper = '''<script>\n(() => {\n  const product = document.getElementById('q-product');\n  document.querySelectorAll('.quick-interest').forEach(btn => btn.addEventListener('click', () => {\n    product.value = btn.dataset.product || '';\n    document.getElementById('interesse').scrollIntoView({behavior:'smooth'});\n  }));\n})();\n</script>'''
-            txt = re.sub(r'<script>\s*\(\(\) => \{.*?</script>\s*</body>', helper + '\n</body>', txt, count=1, flags=re.S)
-
-            p.write_text(txt, encoding='utf-8')
+          p.write_text(txt, encoding='utf-8')
           PY
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add keszletrol.html hu/keszletrol.html en/keszletrol.html
+          git add hu/keszletrol.html
           if ! git diff --cached --quiet; then
-            git commit -m "Make QUICK enquiry forms match contact form"
+            git commit -m "Fix Hungarian QUICK interest scrolling"
             git push
           fi
